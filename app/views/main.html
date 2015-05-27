@@ -1,0 +1,167 @@
+<div id="site-wrapper">
+<header class="site">
+	<h1>
+		<a ng-href="#">
+			<img id="site-logo" src="images/shuffleezer.png" />
+			<span id="site-name">Shuffleezer</span>
+		</a>
+	</h1>
+</header>
+
+<div id="content">
+	<div id="shuffleezer-description">
+		<p>
+			Shuffleezer allows you to create a Deezer playlist with a random sample of tracks from your other Deezer playlists.
+		</p>
+		<p>
+			Cool uses:
+		</p>
+		<ul>
+			<li>Control the size of your offline-saved playlist by offline-saving a limited size sample from your library.</li>
+			<li>Permanently shuffle the order of the tracks in a playlist in a truly random way.</li>
+			<li>Join several playlists together without duplicates (or remove them from a single playlist).</li>
+		</ul>
+	</div>
+	<oauth
+			site="https://connect.deezer.com"
+			authorize-path="/oauth/auth.php"
+			client-id="158381"
+			redirect-uri="{{localhost ? 'http://127.0.0.1:9000' : 'http://shuffleezer.alexjf.net'}}"
+			response-type="token"
+			scope="basic_access,manage_library,delete_library">
+			<!-- profile-uri="https://api.deezer.com/2.0/user/me" -->
+	</oauth>
+
+	<form class="form-horizontal logged-in-content" ng-show="profile">
+		<div id="sources-wrapper" class="form-group">
+			<div id="sources-header">
+				<h3>Sources:</h3>
+			</div>
+			<div id="sources-value">
+				<div id="sources-picker">
+					<ui-select multiple ng-model="selectionData.sources">
+						<ui-select-match placeholder="Select source...">{{$item.name | characters: 70}} &lt;{{$item.total}}
+							songs&gt;</ui-select-match>
+						<ui-select-choices repeat="source in deezerData.playlists | filter: {name: $select.search}">
+							<div ng-bind-html="source.name | characters: 70 | highlight: $select.search"></div>
+							<small>
+								num songs: {{source.total}}
+							</small>
+						</ui-select-choices>
+					</ui-select>
+				</div>
+				<button class="btn btn-success" id="sources-select-all-button" ng-click="selectAllSources()" title="Select all">
+					<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+					<span class="sr-only">Select all</span>
+				</button>
+				<button class="btn btn-success" id="sources-clear-all-button" ng-click="clearSourcesSelection()" title="Clear all">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					<span class="sr-only">Clear all</span>
+				</button>
+			</div>
+		</div>
+		<p>
+			You selected <strong>{{selectionData.sources.length}}</strong> sources containing a total of
+			<strong>{{selectionData.totalSongsInSources}}</strong> songs.
+		</p>
+
+
+		<div id="destination-wrapper" class="form-group">
+			<div id="destination-header">
+				<h3>Destination:</h3>
+			</div>
+			<div id="destination-value">
+				<div id="destination-picker">
+					<ui-select ng-model="selectionData.destination">
+						<ui-select-match placeholder="Select destination...">{{$select.selected.name | characters: 70}}
+							&lt;{{$select.selected.total}}
+							songs&gt;</ui-select-match>
+						<ui-select-choices repeat="playlist in deezerData.playlists | filter: {name: $select.search, owner: profile.id}">
+							<div ng-bind-html="playlist.name | characters: 70 | highlight: $select.search"></div>
+							<small>
+								num songs: {{playlist.total}}
+							</small>
+						</ui-select-choices>
+					</ui-select>
+				</div>
+				<button class="btn btn-success" id="new-playlist-button" ng-click="addPlaylist()" title="Add new playlist">
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+					<span class="sr-only">Add new playlist</span>
+				</button>
+			</div>
+		</div>
+
+		<div id="options-wrapper" class="form-group">
+			<div id="options-header">
+				<h3>Options:</h3>
+			</div>
+
+			<div class="option">
+				<label class="control-label" for="max-songs-destination">Max. songs in destination</label>
+				<input type="text" class="form-control" id="max-songs-destination"
+				   ng-model="selectionData.maxSongsDestination" placeholder="Size of resulting playlist (Default: unlimited)"/>
+			</div>
+
+			<!-- <div class="option"> -->
+				<!-- <label class="checkbox" for="ensure-unique"> -->
+					<!-- <input type="checkbox" id="ensure-unique" ng-model="selectionData.ensureUnique" /> -->
+					<!-- Ensure tracks are unique in destination -->
+				<!-- </label> -->
+				<!-- <div class="alert alert-warning" ng-show="selectionData.ensureUnique"> -->
+					<!-- <p> -->
+						<!-- <strong>WARNING:</strong> -->
+						<!-- If you know that your sources don't have duplicates or have very few ones, consider unchecking -->
+						<!-- this option for significant speedups. -->
+					<!-- </p> -->
+					<!-- <p> -->
+						<!-- Having this option checked requires getting track info for ALL tracks in the source set rather -->
+						<!-- than just enough tracks to fill the destination. -->
+					<!-- </p> -->
+				<!-- </div> -->
+			<!-- </div> -->
+		</div>
+
+		<button
+				id="btn-do-it"
+				class="btn"
+				ng-click="showConfirmDialog()"
+				ng-show="selectionData.destination && selectionData.sources">
+			Do it!
+		</button>
+	</form>
+</div>
+
+<div class="ads">
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!-- Shufflify responsive -->
+	<ins class="adsbygoogle"
+		 style="display:block"
+		 data-ad-client="ca-pub-7030271622919244"
+		 data-ad-slot="9974741111"
+		 data-ad-format="auto"></ins>
+	<script>
+	(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+</div>
+
+<footer class="site">
+	<div id="powered-by">
+		Powered by
+		<a href="http://angularjs.org">AngularJS</a>
+		&nbsp;·&nbsp;
+		<a href="https://developers.deezer.com/api/">Deezer Web API</a>
+	</div>
+	<div id="copyright">
+		Copyright © <a href="http://www.alexjf.net">Alex JF</a> - 2015
+	</div>
+	<div id="feedback">
+		<a href="http://shufflify.alexjf.net">Shufflify</a>
+		&nbsp;·&nbsp;
+		<a href="https://github.com/AlexJF/shuffleezer">Github</a>
+		&nbsp;·&nbsp;
+		<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=alexandrejorgefonseca%40gmail%2ecom&lc=PT&item_number=shuffleezer&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted">Donate</a>
+		&nbsp;·&nbsp;
+		<a href="https://secure.jotformeu.com/form/43322557704352">Feedback</a>
+	</div>
+</footer>
+</div>

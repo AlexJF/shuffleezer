@@ -1,0 +1,43 @@
+<div class="modal-header">
+	<h3 class="modal-title">Review</h3>
+</div>
+<div class="modal-body">
+	<p>
+		<span ng-if="selectionData.maxSongsDestination === 0 || selectionData.maxSongsDestination > 0">
+			I will transfer <strong>up to {{selectionData.totalSongsInDestination}}</strong> songs to the
+			<strong>"{{selectionData.destination.name}}"</strong> playlist. These songs will be randomly chosen
+			from the total of {{selectionData.totalSongsInSources}} songs in the following sources:
+		</span>
+		<span ng-if="(!selectionData.maxSongsDestination && selectionData.maxSongsDestination !== 0) || selectionData.maxSongsDestination < 0">
+			I will shuffle and transfer to the <strong>"{{selectionData.destination.name | characters:70}}"</strong>
+			playlist <strong>all {{selectionData.totalSongsInSources}} songs</strong> in the following sources:
+		</span>
+	</p>
+	<ul>
+		<li ng-repeat="source in selectionData.sources">
+			{{source.name}} &lt;{{source.total}} songs&gt;
+		</li>
+		<li ng-show="selectionData.sources.length == 0">
+			No sources selected
+		</li>
+	</ul>
+	<p ng-show="selectionData.ensureUnique">
+		I will ensure that among the {{selectionData.totalSongsInDestination}} tracks to write to the destination there
+		are <strong>no duplicate tracks</strong>. However, if there are not enough non-duplicate tracks to fill the
+		destination, its final track count will necessarily be less than {{selectionData.totalSongsInDestination}}.
+	</p>
+	<p>
+		Based on an average size of 5MB per track, the "{{selectionData.destination.name | characters:70}}"
+		playlist should end up with {{selectionData.totalSongsInDestination * 5}} MB
+		({{(selectionData.totalSongsInDestination * 5 / 1024 + 0.00001) | number: 2}} GB).
+	</p>
+
+	<div id="replacement-warning" ng-show="selectionData.destination.total > 0" class="alert alert-warning">
+		<strong>WARNING!</strong> The playlist "{{selectionData.destination.name | characters:70}}" is not empty (contains
+		{{selectionData.destination.total}} songs). These will be removed before shuffling.
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="ok()">Do it!</button>
+	<button class="btn btn-warning" ng-click="cancel()">Hmm, let me go back</button>
+</div>
