@@ -1,0 +1,21 @@
+{
+  "name": "jsurl",
+  "ignore": [
+    ".project",
+    "test.html",
+    "bower.json",
+    "package.json",
+    "README.md"
+  ],
+  "homepage": "https://github.com/Mikhus/jsurl",
+  "_release": "061ec3a033",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "061ec3a033336a4d1bb66899631b82ddc2959714"
+  },
+  "_source": "git://github.com/Mikhus/jsurl.git",
+  "_target": "*",
+  "_originalSource": "jsurl",
+  "_direct": true
+}
