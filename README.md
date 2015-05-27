@@ -19,6 +19,7 @@ Cool use cases:
 * [AngularJS ui-select](https://github.com/angular-ui/ui-select)
 * [OAuth-ng](https://andreareginato.github.io/oauth-ng/)
 * [Chance](http://chancejs.com/)
+* [jsurl](https://github.com/Mikhus/jsurl)
 
 ## External web services
 
